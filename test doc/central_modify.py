@@ -123,16 +123,6 @@ def decode_data(data_acc):
             '''
             #array_2d_2[2][j] = (array_2d_1[2][j]%4*256)+(array_2d_1[3][j])     # Z-axis
             array_2d_2[2][j] = (array_2d_1[3-2][j] % 4 * 256) + (array_2d_1[3-3][j])
-            '''
-            print((array_2d_1[2][j]%4)),
-            print((array_2d_1[3][j])),
-            print(array_2d_2[2][j]),
-            print(','),
-            '''
-            #print(array_2d_2[0][j]),
-            #print(array_2d_2[1][j]),
-            #print(array_2d_2[2][j]),
-         #print('\n'),
     print('\n3\n'),
     for i in range(0, 3):
         for j in range(0, 40):
@@ -143,15 +133,13 @@ def decode_data(data_acc):
         for j in range(0, 40):
             if(array_2d_2[i][j]/512==1): print('-'),
             print(array_2d_2[i][j]%512),
-            #print(format(array_2d_2[i][j]%512, '02f')),
         print('\n'),
 
+    #decode for each axis
     for i in range(0, 3):
         for j in range(0, 40):
             if(array_2d_2[i][j]/512==1): print('-'),
-            #print(format((array_2d_2[i][j]%512*2/512.00), '02f')),
             print ('%.2f'%(array_2d_2[i][j]%512*2/512.00)),
-            #print(array_2d_2[i][j]%512*2/512),
         print('\n'),
 
     print('\n4\n'),
@@ -161,23 +149,28 @@ def decode_data(data_acc):
             print("{0:10b}".format(array_2d_2[i][j])),
         print('\n'),
     print('\n5\n'),
-    animation_data(array_2d_2)
+    #animation_data(array_2d_2)
 
-
+'''
 def around_robin():
     for i in range(0, 3):
-        for j in range(0, 700):
-            array_2d_3[i][j+100]=array_2d_4[i][j]
-    return array
+        for j in range(0, 800):
+            array_2d_3[i][j]=array_2d_4[i][j+100]
 
-#def filling_new_data(data):
+def filling_new_data(array_2d_2):
+    for i in range(0, 3):
+        for j in range(0, 100):
+            array_2d_3[i][j+700]=array_2d_2[i][j]
+    for i in range(0, 3):
+        for j in range(0, 800):
+            array_2d_4[i][j+700]=array_2d_3[i][j]
 
 
 
 def animation_data(array_2d_2):
     around_robin()
     filling_new_data(array_2d_2)
-
+'''
 
 
 
