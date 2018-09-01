@@ -72,14 +72,25 @@ command                      = BLEUUID(0x1402, noomi_service_base)
 uuids = [noomi_service_base]
 
 #for round robin function
-array_2d_3 = [([''] * 800) for p in range(4)]
+array_2d_0= [([0] * 40) for p in range(3)]  # correct way to initial
+array_2d_3 = [([0] * 800) for p in range(3)]
 #for display in final
-array_2d_4 = [([''] * 800) for p in range(4)]
+array_2d_4 = [([0] * 800) for p in range(3)]
+
+array_2d_5  = [1]*800
+array_2d_6  = [2]*800
+array_2d_7  = [3]*800
+
+
+array_time = []
+for j in range(0, 800):
+    array_time.append(j*0.025)
+#print len(array_time)
+#print array_time
 
 
 def decode_data(data_acc):
     print('\nlength is:{}'.format(len(data_acc)))
-
     print 'Raw:'
     for x in data_acc:
         print(format(x, '02x')),
@@ -138,8 +149,14 @@ def decode_data(data_acc):
     #decode for each axis
     for i in range(0, 3):
         for j in range(0, 40):
-            if(array_2d_2[i][j]/512==1): print('-'),
-            print ('%.2f'%(array_2d_2[i][j]%512*2/512.00)),
+            if(array_2d_2[i][j]/512==1):
+                #print('-'),
+                array_2d_0[i][j]=-(array_2d_2[i][j]%512*2/512.00)
+            else:
+                array_2d_0[i][j]=(array_2d_2[i][j]%512*2/512.00)
+            #array_2d_5[j]= array_2d_0[i][j]
+            #print ('%.2f'%(array_2d_2[i][j]%512*2/512.00)),
+            print ('%.2f'%(array_2d_0[i][j])),
         print('\n'),
 
     print('\n4\n'),
@@ -149,29 +166,60 @@ def decode_data(data_acc):
             print("{0:10b}".format(array_2d_2[i][j])),
         print('\n'),
     print('\n5\n'),
+    #update_data(array_2d_2)
     #animation_data(array_2d_2)
+    around_robin()
+    filling_new_data(array_2d_0)
 
-'''
 def around_robin():
     for i in range(0, 3):
-        for j in range(0, 800):
-            array_2d_3[i][j]=array_2d_4[i][j+100]
+        for j in range(0, (800-40)):
+            array_2d_3[i][j]=array_2d_4[i][j+40]
+
 
 def filling_new_data(array_2d_2):
+    print('\n6\n'),
     for i in range(0, 3):
-        for j in range(0, 100):
-            array_2d_3[i][j+700]=array_2d_2[i][j]
+        for j in range(0, 40):
+            array_2d_3[i][j+800-40]=array_2d_2[i][j]
+            print ('%.2f' % (array_2d_0[i][j])),
+        print('\n'),
+    print('\n7\n'),
     for i in range(0, 3):
         for j in range(0, 800):
-            array_2d_4[i][j+700]=array_2d_3[i][j]
+            array_2d_4[i][j]=array_2d_3[i][j]
+            print ('%.2f' % (array_2d_3[i][j])),
+        print('\n'),
+            #if (i == 0):array_2d_5[j]=array_2d_3[i][j]
+            #if (i == 1): array_2d_6[j] = array_2d_3[i][j]
+            #if (i == 2): array_2d_7[j] = array_2d_3[i][j]
 
 
 
-def animation_data(array_2d_2):
+
+
+
+
+def update_data(array_2d_4):
     around_robin()
-    filling_new_data(array_2d_2)
-'''
+    filling_new_data(array_2d_4)
 
+
+
+style.use('fivethirtyeight')
+fig = plt.figure()
+ax1 = fig.add_subplot(1,1,1)
+
+def animate(i):
+    #graph_data = open('example.txt','r').read()
+    #lines = graph_data.split('\n')
+    ax1.clear()
+    #ax1.plot(xs, array_time)
+    #ax1.plot(array_time,array_2d_5)
+    ax1.plot( array_time, array_2d_4[0],'C1', label='C1')
+    ax1.plot( array_time, array_2d_4[1],'C2', label='C2')
+    ax1.plot( array_time, array_2d_4[2],'C3', label='C3')
+    #ax1.plot( array_time, array_2d_4[2],'C3', label='C3')
 
 
 
@@ -323,6 +371,8 @@ def main(serial_port, address):
     for i in xrange(CONNECTIONS):
         conn_handle = collector.connect_and_discover()
 
+    ani = animation.FuncAnimation(fig, animate, interval=500)
+    plt.show()
     while(True):
         pass
 
