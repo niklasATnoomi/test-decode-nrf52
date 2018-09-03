@@ -233,8 +233,8 @@ def animate(i):
     ax1.plot( array_time, array_2d_4[1],'C2', label="Y-axis",linewidth=1)
     ax1.plot( array_time, array_2d_4[2],'C3', label="Z-axis",linewidth=1)
     #ax1.plot( array_time, array_2d_4[2],'C3', label='C3')
-    plt.xlabel('Time second')
-    plt.ylabel('Acceleration')
+    plt.xlabel('Time (second)')
+    plt.ylabel('Acceleration (g)')
 
 
 
