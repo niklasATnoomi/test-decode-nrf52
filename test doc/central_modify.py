@@ -84,8 +84,34 @@ command                      = BLEUUID(0x1402, noomi_service_base)
 
 uuids = [noomi_service_base]
 
+
+array_time = []
+for j in range(0, 800):
+    array_time.append(j*0.025)
+
+
+
+#ACC or Pressure data seperation --------------------------------------------------------------------------------
+
+def seperate_data(data_all):
+    data_acc =[]
+    data_pressure = []
+    if(data_all[0] == 0):
+        for i in range(9, len(data_all)):
+            data_acc.append(data_all[i])
+            ##print(format(data_all[i],'02x')),
+        decode_data_acc(data_acc) #select only for acc data
+    if (data_all[0] == 2):
+        for i in range(9, len(data_all)):
+            data_pressure.append(data_all[i])
+            ##print(format(data_all[i],'02x')),
+        decode_data_pressure(data_pressure) #select only for acc data
+
+
+#ACC decoding and plot--------------------------------------------------------------------------------
+
 #for round robin function
-array_2d_acc_0= [([0] * 40) for p in range(3)]  # correct way to initial
+array_2d_acc_0 = [([0] * 40) for p in range(3)]  # correct way to initial
 array_2d_acc_3 = [([0] * 800) for p in range(3)]
 #for display in final
 array_2d_acc_4 = [([0] * 800) for p in range(3)]
@@ -95,10 +121,18 @@ array_2d_acc_6  = [2]*800
 array_2d_acc_7  = [3]*800
 
 
-array_time = []
-for j in range(0, 800):
-    array_time.append(j*0.025)
+style.use('fivethirtyeight')
+fig1 = plt.figure()
+ax1 = fig1.add_subplot(1,1,1)
 
+def animate_acc(i):
+    ax1.clear()
+    ax1.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
+    plt.legend(loc='best')
+    plt.xlabel('Time (second)')
+    plt.ylabel('Acceleration (g)')
 
 def decode_data_acc(data_acc):
     print('\nlength is:{}'.format(len(data_acc)))
@@ -199,28 +233,51 @@ def update_data_acc(array_2d_acc_4):
 
 
 
-def seperate_data_acc(data_all):
-    data_acc =[]
-    if(data_all[0]==0):
-        for i in range(9, len(data_all)):
-            data_acc.append(data_all[i])
-            ##print(format(data_all[i],'02x')),
-        decode_data_acc(data_acc) #select only for acc data
 
-	
+
+
+
+
+#pressure sensor decoding and plot--------------------------------------------------------------------------------
+#for round robin function
+array_2d_pressure_0 = [([0] * 40) for p in range(3)]  # correct way to initial
+array_2d_pressure_3 = [([0] * 800) for p in range(3)]
+#for display in final
+array_2d_pressure_4 = [([0] * 800) for p in range(3)]
+
+array_2d_pressure_5  = [1]*800
+array_2d_pressure_6  = [2]*800
+array_2d_pressure_7  = [3]*800
+
 
 style.use('fivethirtyeight')
-fig = plt.figure()
-ax1 = fig.add_subplot(1,1,1)
+fig2 = plt.figure()
+ax2 = fig2.add_subplot(1,1,1)
 
-def animate(i):
-    ax1.clear()
-    ax1.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
-    ax1.plot( array_time, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
-    ax1.plot( array_time, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
+def animate_pressure(i):
+    ax2.clear()
+    ax2.plot( array_time, array_2d_pressure_4[0],'C1', label="X-axis",linewidth=1)
+    ax2.plot( array_time, array_2d_pressure_4[1],'C2', label="Y-axis",linewidth=1)
+    ax2.plot( array_time, array_2d_pressure_4[2],'C3', label="Z-axis",linewidth=1)
     plt.legend(loc='best')
     plt.xlabel('Time (second)')
     plt.ylabel('Acceleration (g)')
+
+def decode_data_acc(data_acc):
+
+
+
+
+def update_data_pressure(array_2d_pressure_4):
+    around_robin()
+    filling_new_data(array_2d_pressure_4)
+
+
+
+
+
+
+
 
 		
 
@@ -317,7 +374,7 @@ class Collector(BLEDriverObserver, BLEAdapterObserver):
         # storage_data(data)
         #print '\n'
         #print''.join('{:02x}'.format(x) for x in data)
-        seperate_data_acc(data)
+        seperate_data(data)
 
 
     def on_att_mtu_exchanged(self, ble_driver, conn_handle, att_mtu):
@@ -340,7 +397,8 @@ def main(serial_port, address):
     for i in xrange(CONNECTIONS):
         conn_handle = collector.connect_and_discover()
 
-    ani = animation.FuncAnimation(fig, animate, interval=300)
+    ani = animation.FuncAnimation(fig1, animate_acc, interval=300)
+    #ani = animation.FuncAnimation(figure2, animate_acc, interval=300)
     plt.show()
     while(True):
         pass
