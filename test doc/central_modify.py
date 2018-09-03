@@ -85,14 +85,14 @@ command                      = BLEUUID(0x1402, noomi_service_base)
 uuids = [noomi_service_base]
 
 #for round robin function
-array_2d_0= [([0] * 40) for p in range(3)]  # correct way to initial
-array_2d_3 = [([0] * 800) for p in range(3)]
+array_2d_acc_0= [([0] * 40) for p in range(3)]  # correct way to initial
+array_2d_acc_3 = [([0] * 800) for p in range(3)]
 #for display in final
-array_2d_4 = [([0] * 800) for p in range(3)]
+array_2d_acc_4 = [([0] * 800) for p in range(3)]
 
-array_2d_5  = [1]*800
-array_2d_6  = [2]*800
-array_2d_7  = [3]*800
+array_2d_acc_5  = [1]*800
+array_2d_acc_6  = [2]*800
+array_2d_acc_7  = [3]*800
 
 
 array_time = []
@@ -105,87 +105,85 @@ def decode_data_acc(data_acc):
     print 'Raw:'
     for x in data_acc:
         print(format(x, '02x')),
-
-    #array_2d= np.zeros((2, 1))
-    #array_2d_1 = [['']*40]*4 #array 4*160
-    array_2d_1 = [([''] * 40) for p in range(4)] #correct way to initial
-    print('\nlength is:{}'.format(len(array_2d_1[0])))
+		
+    array_2d_acc_1 = [([''] * 40) for p in range(4)] #correct way to initial
+    print('\nlength is:{}'.format(len(array_2d_acc_1[0])))
     print('\n0\n'),
     for i in range(0, len(data_acc)):
-        array_2d_1[i%4][i/4]=data_acc[i]
-        print(format(array_2d_1[i%4][i/4], '02x')),
+        array_2d_acc_1[i%4][i/4]=data_acc[i]
+        print(format(array_2d_acc_1[i%4][i/4], '02x')),
 
     print('\n1\n'), #seperate raw value into arrays
     for i in range(0, 4):
         for j in range(0, 40):
-            print(format(array_2d_1[i][j], '02x')),
+            print(format(array_2d_acc_1[i][j], '02x')),
         print('\n'),
 
 
 
     print('\n2\n'), #seperate value for each axis
-    array_2d_2 = [([0] * 40) for p in range(3)]  # correct way to initial
+    array_2d_acc_2 = [([0] * 40) for p in range(3)]  # correct way to initial
     for i in range(0, 3):
         for j in range(0, 40):
-            #array_2d_2[0][j] = (array_2d_1[0][j]%64*16)+(array_2d_1[1][j]/16)   # X-axis 10bits
-            array_2d_2[0][j] = (array_2d_1[3-0][j]%64*16)+(array_2d_1[3-1][j]/16)
+            #array_2d_acc_2[0][j] = (array_2d_acc_1[0][j]%64*16)+(array_2d_acc_1[1][j]/16)   # X-axis 10bits
+            array_2d_acc_2[0][j] = (array_2d_acc_1[3-0][j]%64*16)+(array_2d_acc_1[3-1][j]/16)
 
-            #array_2d_2[1][j] = (array_2d_1[1][j]%16*64)+(array_2d_1[2][j]/4)     # Y-axis
-            array_2d_2[1][j] = (array_2d_1[3-1][j] % 16 * 64) + (array_2d_1[3-2][j] / 4)
+            #array_2d_acc_2[1][j] = (array_2d_acc_1[1][j]%16*64)+(array_2d_acc_1[2][j]/4)     # Y-axis
+            array_2d_acc_2[1][j] = (array_2d_acc_1[3-1][j] % 16 * 64) + (array_2d_acc_1[3-2][j] / 4)
 
-            #array_2d_2[2][j] = (array_2d_1[2][j]%4*256)+(array_2d_1[3][j])     # Z-axis
-            array_2d_2[2][j] = (array_2d_1[3-2][j] % 4 * 256) + (array_2d_1[3-3][j])
+            #array_2d_acc_2[2][j] = (array_2d_acc_1[2][j]%4*256)+(array_2d_acc_1[3][j])     # Z-axis
+            array_2d_acc_2[2][j] = (array_2d_acc_1[3-2][j] % 4 * 256) + (array_2d_acc_1[3-3][j])
     print('\n3\n'),
     for i in range(0, 3):
         for j in range(0, 40):
-            print(array_2d_2[i][j]),
+            print(array_2d_acc_2[i][j]),
         print('\n'),
 
     for i in range(0, 3):
         for j in range(0, 40):
-            if(array_2d_2[i][j]/512==1): print('-'),
-            print(array_2d_2[i][j]%512),
+            if(array_2d_acc_2[i][j]/512==1): print('-'),
+            print(array_2d_acc_2[i][j]%512),
         print('\n'),
 
     #decode for each axis
     for i in range(0, 3):
         for j in range(0, 40):
-            if(array_2d_2[i][j]/512==1):
+            if(array_2d_acc_2[i][j]/512==1):
                 #print('-'),
-                array_2d_0[i][j]=-(array_2d_2[i][j]%512*2/512.00)
+                array_2d_acc_0[i][j]=-(array_2d_acc_2[i][j]%512*2/512.00)
             else:
-                array_2d_0[i][j]=(array_2d_2[i][j]%512*2/512.00)
-            print ('%.2f'%(array_2d_0[i][j])),
+                array_2d_acc_0[i][j]=(array_2d_acc_2[i][j]%512*2/512.00)
+            print ('%.2f'%(array_2d_acc_0[i][j])),
         print('\n'),
 
     print('\n4\n'),
 
     for i in range(0, 3):
         for j in range(0, 40):
-            print("{0:10b}".format(array_2d_2[i][j])),
+            print("{0:10b}".format(array_2d_acc_2[i][j])),
         print('\n'),
     print('\n5\n'),
     around_robin_acc()
-    filling_new_data_acc(array_2d_0)
+    filling_new_data_acc(array_2d_acc_0)
 
 def around_robin_acc():
     for i in range(0, 3):
         for j in range(0, (800-40)):
-            array_2d_3[i][j]=array_2d_4[i][j+40]
+            array_2d_acc_3[i][j]=array_2d_acc_4[i][j+40]
 
 
-def filling_new_data_acc(array_2d_2):
+def filling_new_data_acc(array_2d_acc_2):
     print('\n6\n'),
     for i in range(0, 3):
         for j in range(0, 40):
-            array_2d_3[i][j+800-40]=array_2d_2[i][j]
-            print ('%.2f' % (array_2d_0[i][j])),
+            array_2d_acc_3[i][j+800-40]=array_2d_acc_2[i][j]
+            print ('%.2f' % (array_2d_acc_0[i][j])),
         print('\n'),
     print('\n7\n'),
     for i in range(0, 3):
         for j in range(0, 800):
-            array_2d_4[i][j]=array_2d_3[i][j]
-            print ('%.2f' % (array_2d_3[i][j])),
+            array_2d_acc_4[i][j]=array_2d_acc_3[i][j]
+            print ('%.2f' % (array_2d_acc_3[i][j])),
         print('\n'),
 
 
@@ -193,15 +191,15 @@ def filling_new_data_acc(array_2d_2):
 
 
 
-def update_data(array_2d_4):
+def update_data_acc(array_2d_acc_4):
     around_robin()
-    filling_new_data(array_2d_4)
+    filling_new_data(array_2d_acc_4)
 
 
 
 
 
-def seperate_data(data_all):
+def seperate_data_acc(data_all):
     data_acc =[]
     if(data_all[0]==0):
         for i in range(9, len(data_all)):
@@ -217,9 +215,9 @@ ax1 = fig.add_subplot(1,1,1)
 
 def animate(i):
     ax1.clear()
-    ax1.plot( array_time, array_2d_4[0],'C1', label="X-axis",linewidth=1)
-    ax1.plot( array_time, array_2d_4[1],'C2', label="Y-axis",linewidth=1)
-    ax1.plot( array_time, array_2d_4[2],'C3', label="Z-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
     plt.legend(loc='best')
     plt.xlabel('Time (second)')
     plt.ylabel('Acceleration (g)')
@@ -319,7 +317,7 @@ class Collector(BLEDriverObserver, BLEAdapterObserver):
         # storage_data(data)
         #print '\n'
         #print''.join('{:02x}'.format(x) for x in data)
-        seperate_data(data)
+        seperate_data_acc(data)
 
 
     def on_att_mtu_exchanged(self, ble_driver, conn_handle, att_mtu):
