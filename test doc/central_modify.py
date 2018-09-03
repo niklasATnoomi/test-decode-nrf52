@@ -1,7 +1,20 @@
-#reference for init array https://tianle.me/2017/02/28/python-array/
+#
+#reference for init array
+#https://tianle.me/2017/02/28/python-array/
+#
+#
+#https://morvanzhou.github.io/tutorials/data-manipulation/plt/2-5-lagend/
+#
+#reference for animation
 #https://pythonprogramming.net/live-graphs-matplotlib-tutorial/
-#python central_modify.py -p COM1 -f NRF52 -a EB2533326679
+#
+#
+#
 #cd C:\Users\Niklas Liu\Documents\NRF_test_connection\test-decode-nrf52\test doc
+#python central_modify.py -p COM1 -f NRF52 -a EB2533326679
+#
+#
+#
 # Copyright (c) 2016 Nordic Semiconductor ASA
 # All rights reserved.
 #
@@ -89,7 +102,7 @@ for j in range(0, 800):
 #print array_time
 
 
-def decode_data(data_acc):
+def decode_data_acc(data_acc):
     print('\nlength is:{}'.format(len(data_acc)))
     print 'Raw:'
     for x in data_acc:
@@ -168,16 +181,16 @@ def decode_data(data_acc):
     print('\n5\n'),
     #update_data(array_2d_2)
     #animation_data(array_2d_2)
-    around_robin()
-    filling_new_data(array_2d_0)
+    around_robin_acc()
+    filling_new_data_acc(array_2d_0)
 
-def around_robin():
+def around_robin_acc():
     for i in range(0, 3):
         for j in range(0, (800-40)):
             array_2d_3[i][j]=array_2d_4[i][j+40]
 
 
-def filling_new_data(array_2d_2):
+def filling_new_data_acc(array_2d_2):
     print('\n6\n'),
     for i in range(0, 3):
         for j in range(0, 40):
@@ -216,10 +229,12 @@ def animate(i):
     ax1.clear()
     #ax1.plot(xs, array_time)
     #ax1.plot(array_time,array_2d_5)
-    ax1.plot( array_time, array_2d_4[0],'C1', label='C1')
-    ax1.plot( array_time, array_2d_4[1],'C2', label='C2')
-    ax1.plot( array_time, array_2d_4[2],'C3', label='C3')
+    ax1.plot( array_time, array_2d_4[0],'C1', label="X-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_4[1],'C2', label="Y-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_4[2],'C3', label="Z-axis",linewidth=1)
     #ax1.plot( array_time, array_2d_4[2],'C3', label='C3')
+    plt.xlabel('Time second')
+    plt.ylabel('Acceleration')
 
 
 
@@ -244,7 +259,7 @@ def seperate_data(data_all):
             i += 1
         print('End \n'),
         '''
-        decode_data(data_acc) #select only for acc data
+        decode_data_acc(data_acc) #select only for acc data
     '''
 	   #-----print all 169bytes data-----
 	   for x in data1:
@@ -371,7 +386,8 @@ def main(serial_port, address):
     for i in xrange(CONNECTIONS):
         conn_handle = collector.connect_and_discover()
 
-    ani = animation.FuncAnimation(fig, animate, interval=500)
+    ani = animation.FuncAnimation(fig, animate, interval=300)
+    #ani = animation.FuncAnimation(fig, animate, interval=500)
     plt.show()
     while(True):
         pass
