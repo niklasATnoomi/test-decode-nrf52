@@ -98,8 +98,6 @@ array_2d_7  = [3]*800
 array_time = []
 for j in range(0, 800):
     array_time.append(j*0.025)
-#print len(array_time)
-#print array_time
 
 
 def decode_data_acc(data_acc):
@@ -131,20 +129,10 @@ def decode_data_acc(data_acc):
         for j in range(0, 40):
             #array_2d_2[0][j] = (array_2d_1[0][j]%64*16)+(array_2d_1[1][j]/16)   # X-axis 10bits
             array_2d_2[0][j] = (array_2d_1[3-0][j]%64*16)+(array_2d_1[3-1][j]/16)
-            '''
-            print((array_2d_1[0][j]%64)),
-            print(array_2d_1[1][j]/16),
-            print(array_2d_2[0][j]),
-            print(','),
-            '''
+
             #array_2d_2[1][j] = (array_2d_1[1][j]%16*64)+(array_2d_1[2][j]/4)     # Y-axis
             array_2d_2[1][j] = (array_2d_1[3-1][j] % 16 * 64) + (array_2d_1[3-2][j] / 4)
-            '''
-            print((array_2d_1[1][j]%16)),
-            print((array_2d_1[2][j]/4)),
-            print(array_2d_2[1][j]),
-            print(','),
-            '''
+
             #array_2d_2[2][j] = (array_2d_1[2][j]%4*256)+(array_2d_1[3][j])     # Z-axis
             array_2d_2[2][j] = (array_2d_1[3-2][j] % 4 * 256) + (array_2d_1[3-3][j])
     print('\n3\n'),
@@ -167,8 +155,6 @@ def decode_data_acc(data_acc):
                 array_2d_0[i][j]=-(array_2d_2[i][j]%512*2/512.00)
             else:
                 array_2d_0[i][j]=(array_2d_2[i][j]%512*2/512.00)
-            #array_2d_5[j]= array_2d_0[i][j]
-            #print ('%.2f'%(array_2d_2[i][j]%512*2/512.00)),
             print ('%.2f'%(array_2d_0[i][j])),
         print('\n'),
 
@@ -179,8 +165,6 @@ def decode_data_acc(data_acc):
             print("{0:10b}".format(array_2d_2[i][j])),
         print('\n'),
     print('\n5\n'),
-    #update_data(array_2d_2)
-    #animation_data(array_2d_2)
     around_robin_acc()
     filling_new_data_acc(array_2d_0)
 
@@ -203,10 +187,6 @@ def filling_new_data_acc(array_2d_2):
             array_2d_4[i][j]=array_2d_3[i][j]
             print ('%.2f' % (array_2d_3[i][j])),
         print('\n'),
-            #if (i == 0):array_2d_5[j]=array_2d_3[i][j]
-            #if (i == 1): array_2d_6[j] = array_2d_3[i][j]
-            #if (i == 2): array_2d_7[j] = array_2d_3[i][j]
-
 
 
 
@@ -219,55 +199,31 @@ def update_data(array_2d_4):
 
 
 
+
+
+def seperate_data(data_all):
+    data_acc =[]
+    if(data_all[0]==0):
+        for i in range(9, len(data_all)):
+            data_acc.append(data_all[i])
+            ##print(format(data_all[i],'02x')),
+        decode_data_acc(data_acc) #select only for acc data
+
+	
+
 style.use('fivethirtyeight')
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 
 def animate(i):
-    #graph_data = open('example.txt','r').read()
-    #lines = graph_data.split('\n')
     ax1.clear()
-    #ax1.plot(xs, array_time)
-    #ax1.plot(array_time,array_2d_5)
     ax1.plot( array_time, array_2d_4[0],'C1', label="X-axis",linewidth=1)
     ax1.plot( array_time, array_2d_4[1],'C2', label="Y-axis",linewidth=1)
     ax1.plot( array_time, array_2d_4[2],'C3', label="Z-axis",linewidth=1)
-    plt.legend(loc='upper right')
+    plt.legend(loc='best')
     plt.xlabel('Time (second)')
     plt.ylabel('Acceleration (g)')
 
-
-
-def seperate_data(data_all):
-    data_acc =[]
-    ##print('\n'),
-    if(data_all[0]==0):
-        ##print(len(data_all))
-        '''
-        for i in range(0, len(data_all)):
-            print(format(data_all[i], '02x')),
-        '''
-        for i in range(9, len(data_all)):
-            data_acc.append(data_all[i])
-            ##print(format(data_all[i],'02x')),
-        '''
-        print('\n'),
-        print('Copy to\n'),
-        print(len(data_acc))
-        while i < (len(data_acc)):
-            print(format(data_acc[i], '02x')),
-            i += 1
-        print('End \n'),
-        '''
-        decode_data_acc(data_acc) #select only for acc data
-    '''
-	   #-----print all 169bytes data-----
-	   for x in data1:
-		 print(format(x,'02x')),
-	   print('\n'),
-	'''
-	
-	
 		
 
 		
@@ -387,7 +343,6 @@ def main(serial_port, address):
         conn_handle = collector.connect_and_discover()
 
     ani = animation.FuncAnimation(fig, animate, interval=300)
-    #ani = animation.FuncAnimation(fig, animate, interval=500)
     plt.show()
     while(True):
         pass
