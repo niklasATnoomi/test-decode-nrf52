@@ -9,6 +9,12 @@
 #https://pythonprogramming.net/live-graphs-matplotlib-tutorial/
 #
 #
+#fft
+#https://www.youtube.com/watch?v=aQKX3mrDFoY
+#https://stackoverflow.com/questions/48298724/fast-fourier-transform-on-motor-vibration-signal-in-python
+#https://www.jianshu.com/p/d5c011776ac0
+#https://zhuanlan.zhihu.com/p/27880690
+#
 #
 #cd C:\Users\Niklas Liu\Documents\NRF_test_connection\test-decode-nrf52\test doc
 #python central_modify.py -p COM1 -f NRF52 -a EB2533326679
@@ -63,7 +69,7 @@ from matplotlib import style
 
 import numpy as np
 sys.stdout.write('.')
-
+import time
 from pc_ble_driver_py.observers     import *
 
 TARGET_DEV_NAME = "Noomi WB"
@@ -76,6 +82,15 @@ nrf_sd_ble_api_ver = config.sd_api_ver_get()
 
 from pc_ble_driver_py.ble_driver    import BLEDriver, BLEAdvData, BLEEvtID, BLEEnableParams, BLEGapTimeoutSrc, BLEUUID, BLEUUIDBase, BLEGapConnParams
 from pc_ble_driver_py.ble_adapter   import BLEAdapter
+
+
+from scipy.fftpack import fft
+import pandas as pd
+
+
+
+
+
 
 noomi_service_base           = BLEUUIDBase(list(reversed([0x75, 0xbf, 0xce, 0x84, 0x18, 0x98, 0x03, 0x9b, 0x6a, 0x4a, 0xb7, 0x26, 0x4c, 0x01, 0x52, 0xe4])))
 data_stream                  = BLEUUID(0x1401, noomi_service_base)
@@ -106,7 +121,85 @@ def seperate_data(data_all):
             data_pressure.append(data_all[i])
             ##print(format(data_all[i],'02x')),
         decode_data_pressure(data_pressure) #select only for acc data
+'''
+def update_time():
+    t = 0
+    t_max = 10
+    while t<t_max:
+        t += anim.direction
+        yield t
 
+def update_plot(t):
+    txt.set_text('%s'%t)
+    return txt
+
+def on_press(event):
+    if event.key.isspace():
+        if anim.running:
+            anim.event_source.stop()
+        else:
+            anim.event_source.start()
+        anim.running ^= True
+    elif event.key == 'left':
+        anim.direction = -1
+    elif event.key == 'right':
+        anim.direction = +1
+
+    # Manually update the plot
+    if event.key in ['left','right']:
+        t = anim.frame_seq.next()
+        update_plot(t)
+        plt.draw()
+
+def onClick(event):
+    global pause
+    pause ^= True
+fig.canvas.mpl_connect('button_press_event', onClick)
+'''
+
+
+
+'''
+    if event.key.isspace():
+        if ani.running:
+            time.sleep(1)
+            #ani.event_source.stop()
+            print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+            print "STOP "
+            print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+        else:
+           # time.sleep(1)
+            ani.event_source.start()
+            print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+            print "START "
+            print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+        anim.running ^= True
+'''
+'''
+ani_running = True
+def onClick(event):
+    if ani_running:
+        print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+        print "STOP "
+        print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+        ani.event_source.stop()
+        ani_running = False
+    else:
+        print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+        print "START "
+        print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+        ani.event_source.start()
+        ani_running = True
+'''
+
+pause = False
+def onClick(event):
+    global pause
+    pause ^= True
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
+    print "STOP "
+    print pause
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'),
 
 #ACC decoding and plot--------------------------------------------------------------------------------
 
@@ -121,10 +214,15 @@ array_2d_acc_6  = [2]*800
 array_2d_acc_7  = [3]*800
 
 
+
+
 style.use('fivethirtyeight')
 fig1 = plt.figure()
 ax1 = fig1.add_subplot(1,1,1)
+#fig1, ax1 = plt.subplots()
+#xt = fig1.text(0.5,0.5,'0')
 
+#fig1.canvas.mpl_connect('key_press_event', on_press)
 def animate_acc(i):
     ax1.clear()
     ax1.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
@@ -184,9 +282,9 @@ def decode_data_acc(data_acc):
         for j in range(0, 40):
             if(array_2d_acc_2[i][j]/512==1):
                 #print('-'),
-                array_2d_acc_0[i][j]=-(array_2d_acc_2[i][j]%512*2/512.00)
+                array_2d_acc_0[i][j]=-(array_2d_acc_2[i][j]%512*2/512.000000)
             else:
-                array_2d_acc_0[i][j]=(array_2d_acc_2[i][j]%512*2/512.00)
+                array_2d_acc_0[i][j]=(array_2d_acc_2[i][j]%512*2/512.000000)
             print ('%.2f'%(array_2d_acc_0[i][j])),
         print('\n'),
 
@@ -197,8 +295,15 @@ def decode_data_acc(data_acc):
             print("{0:10b}".format(array_2d_acc_2[i][j])),
         print('\n'),
     print('\n5\n'),
-    around_robin_acc()
-    filling_new_data_acc(array_2d_acc_0)
+
+
+    if(pause == False):
+         print("\n NOT Update data\n")
+         around_robin_acc()
+         filling_new_data_acc(array_2d_acc_0)
+    else:
+         print("\n Update data\n")
+
 
 def around_robin_acc():
     for i in range(0, 3):
@@ -240,10 +345,11 @@ def update_data_acc(array_2d_acc_4):
 
 #pressure sensor decoding and plot--------------------------------------------------------------------------------
 #for round robin function
-array_2d_pressure_0 = [([0] * 40) for p in range(3)]  # correct way to initial
-array_2d_pressure_3 = [([0] * 800) for p in range(3)]
+'''
+array_2d_pressure_0 = ([0] * 40) # correct way to initial
+array_2d_pressure_3 = ([0] * 800)
 #for display in final
-array_2d_pressure_4 = [([0] * 800) for p in range(3)]
+array_2d_pressure_4 = ([0] * 800)
 
 array_2d_pressure_5  = [1]*800
 array_2d_pressure_6  = [2]*800
@@ -256,14 +362,15 @@ ax2 = fig2.add_subplot(1,1,1)
 
 def animate_pressure(i):
     ax2.clear()
-    ax2.plot( array_time, array_2d_pressure_4[0],'C1', label="X-axis",linewidth=1)
-    ax2.plot( array_time, array_2d_pressure_4[1],'C2', label="Y-axis",linewidth=1)
-    ax2.plot( array_time, array_2d_pressure_4[2],'C3', label="Z-axis",linewidth=1)
+    ax2.plot( array_time, array_2d_pressure_0[0],'C1', label="X-axis",linewidth=1)
     plt.legend(loc='best')
     plt.xlabel('Time (second)')
     plt.ylabel('Acceleration (g)')
 
+
+
 def decode_data_acc(data_acc):
+
 
 
 
@@ -271,8 +378,7 @@ def decode_data_acc(data_acc):
 def update_data_pressure(array_2d_pressure_4):
     around_robin()
     filling_new_data(array_2d_pressure_4)
-
-
+'''
 
 
 
@@ -373,7 +479,7 @@ class Collector(BLEDriverObserver, BLEAdapterObserver):
         # print ''.join('{:02x}'.format(x) for x in data)
         # storage_data(data)
         #print '\n'
-        #print''.join('{:02x}'.format(x) for x in data)
+        print''.join('{:02x}'.format(x) for x in data)
         seperate_data(data)
 
 
@@ -396,8 +502,16 @@ def main(serial_port, address):
     collector.open()
     for i in xrange(CONNECTIONS):
         conn_handle = collector.connect_and_discover()
+    #fig1.canvas.mpl_connect('key_press_event', on_press)
+    #ani = animation.FuncAnimation(fig1, animate_acc, interval=300)
+    #ani.running = True
+    #ani.direction = +1
+    fig1.canvas.mpl_connect('button_press_event', onClick)
+    anim = animation.FuncAnimation(fig1, animate_acc, blit=False, interval=300, repeat=True)
+    plt.show()
 
-    ani = animation.FuncAnimation(fig1, animate_acc, interval=300)
+
+
     #ani = animation.FuncAnimation(figure2, animate_acc, interval=300)
     plt.show()
     while(True):
@@ -427,3 +541,5 @@ if __name__ == "__main__":
     init(args.family)
     main(args.port, args.address)
     quit()
+
+
