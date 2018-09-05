@@ -23,7 +23,7 @@
 #
 #
 #cd C:\Users\Niklas Liu\Documents\NRF_test_connection\test-decode-nrf52\test doc
-#python central_modify.py -p COM1 -f NRF52 -a EB2533326679
+#python central_modify_fft.py -p COM1 -f NRF52 -a EB2533326679
 #
 #
 #
@@ -152,7 +152,6 @@ array_2d_acc_5  = [1]*800
 array_2d_acc_6  = [2]*800
 array_2d_acc_7  = [3]*800
 
-T=0
 
 
 style.use('fivethirtyeight')
@@ -170,6 +169,9 @@ def animate_acc(i):
     plt.legend(loc='best')
     plt.xlabel('Time (second)')
     plt.ylabel('Acceleration (g)')
+
+
+
 
 def decode_data_acc(data_acc):
     print('\nlength is:{}'.format(len(data_acc)))
@@ -242,8 +244,48 @@ def decode_data_acc(data_acc):
          filling_new_data_acc(array_2d_acc_0)
     else:
          print("\n Update data\n")
-    #T = T + 1
-    #if(T=200):
+
+    # t = np.linspace(0, 0.5, 500)
+    #s = np.sin(40 * 2 * np.pi * t) + 0.5 * np.sin(90 * 2 * np.pi * t)
+    #array_time
+    '''
+    print('\n8\n'),
+    s = np.sin(40 * 2 * np.pi * array_time) + 0.5 * np.sin(90 * 2 * np.pi * array_time)
+    print('\n9\n'),
+    fft = np.fft.fft(s)
+    print('\n10\n'),
+    T = t[1] - t[0]  # sample rate
+    N = s.size
+    print('\n11\n'),
+    f = np.linspace(0, 1 / T, N)
+    print('\n12\n'),
+    '''
+
+
+
+
+    '''
+    print('\n8\n'),
+    s=np.array_2d_acc_4[0]
+    print s
+    print('\n9\n'),
+    fft = np.fft.fft(array_2d_acc_4[0])
+    print('\n10\n'),
+    t = np.linspace(0, 0.025, 20)
+    print('\n11\n'),
+    T = t[1] - t[0]  # sample rate
+    print('\n12\n'),
+    N = s.size
+    print "\n\narray_time size is"
+    print array_time.size
+    print('\n13\n'),
+    # 1/T = frequency
+    f = np.linspace(0, 1 / T, N)
+    print('\n14\n'),
+    '''
+
+
+
 
 
 
@@ -258,13 +300,13 @@ def around_robin_acc():
 
 
 def filling_new_data_acc(array_2d_acc_2):
-    print('\n6\n'),
+    print('\n06\n'),
     for i in range(0, 3):
         for j in range(0, 40):
             array_2d_acc_3[i][j+800-40]=array_2d_acc_2[i][j]
             print ('%.6f' % (array_2d_acc_0[i][j])),
         print('\n'),
-    print('\n7\n'),
+    print('\n07\n'),
     for i in range(0, 3):
         for j in range(0, 800):
             array_2d_acc_4[i][j]=array_2d_acc_3[i][j]
@@ -281,68 +323,87 @@ def filling_new_data_acc(array_2d_acc_2):
 #ACC FFT---------------------------------------------------------------------------------------------------
 #nor = pd.read_csv('normal.csv', header=1)
 #https://plot.ly/matplotlib/fft/
-'''
+
 import matplotlib.pyplot as plt
 import plotly.plotly as py
 import numpy as np
-# Learn about API authentication here: https://plot.ly/python/getting-started
-# Find your api_key here: https://plot.ly/settings/api
 
-Fs = 40  # sampling rate
-Ts = 1.0/Fs # sampling interval
-t = np.arange(0,1,Ts) # time vector
 
-ff = 5  # frequency of the signal
-y = np.sin(2*np.pi*ff*t)
+style.use('fivethirtyeight')
+fig2 = plt.figure()
+ax2 = fig2.add_subplot(1,1,1)
 
-n = len(y) # length of the signal
-k = np.arange(n)
-T = n/Fs
-frq = k/T # two sides frequency range
-frq = frq[range(n/2)] # one side frequency range
+def animate_acc_fft(i):
 
-Y = np.fft.fft(y)/n # fft computing and normalization
-Y = Y[range(n/2)]
+    print('\n08\n'),
+    s = []
+    print('\n09\n'),
+    for j in range(0, 800):
+        #array_time.append(j * 0.025)
+        s.append(array_2d_acc_4[0][j])
 
-fig, ax = plt.subplots(2, 1)
-ax[0].plot(t,y)
-ax[0].set_xlabel('Time')
-ax[0].set_ylabel('Amplitude')
-ax[1].plot(frq,abs(Y),'r') # plotting the spectrum
-ax[1].set_xlabel('Freq (Hz)')
-ax[1].set_ylabel('|Y(freq)|')
+    #t = np.linspace(0, 0.5, 500)
+    print('\n10\n'),
+    #s = array_2d_acc_4[0]
+    print('\n11\n'),
+    fft = np.fft.fft(s)
+    T = array_time[1] - array_time[0]  # sample rate
+    print('\n12\n'),
+    N = 800
+    print('\n13\n'),
+    ''' '''
 
-plot_url = py.plot_mpl(fig, filename='mpl-basic-fft')
 
-#https://www.youtube.com/watch?v=aQKX3mrDFoY
 
+
+
+
+
+    '''
+    print('\n8\n'),
+    t = np.linspace(0, 0.5, 500)
+    print('\n9\n'),
+    s = np.sin(40 * 2 * np.pi * t) + 0.5 * np.sin(90 * 2 * np.pi * t)
+    print('\n10\n'),
+    fft = np.fft.fft(s)
+    T = t[1] - t[0]  # sample rate
+    print('\n11\n'),
+    N = s.size
+    print('\n12\n'),
+    '''
+
+
+    # 1/T = frequency
+    f = np.linspace(0, 1 / T, N)
+
+    ax2.clear()
+    #ax2.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
+    #ax2.plot( array_time, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
+    #ax2.plot( array_time, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
+    #ax2.plot(f[:N // 2], np.abs(fft)[:N // 2] * 1 / N)
+    ax2.plot(f, np.abs(fft * 1 / N))
+    #ax2.plot(f[:N // 2], np.abs(fft)[:N // 2] * 1 / N)
+    #plt.bar(f[:N // 2], np.abs(fft)[:N // 2] * 1 / N, width=1.5)  # 1 / N is a normalization factor
+    plt.legend(loc='best')
+    plt.ylabel("Amplitude")
+    plt.xlabel("Frequency [Hz]")
+
+    '''
+    #plt.bar(f[:N // 2], np.abs(fft)[:N // 2] * 1 / N, width=1.5)  # 1 / N is a normalization factor
+    ax2.plot(array_time, array_2d_acc_4[2], 'C3', label="Z-axis", linewidth=1)
+    plt.ylabel("Amplitude")
+    plt.xlabel("Frequency [Hz]")
+    
+
+def animate_acc(i):
+    ax1.clear()
+    ax1.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
+    ax1.plot( array_time, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
+    plt.legend(loc='best')
+    plt.xlabel('Time (second)')
+    plt.ylabel('Acceleration (g)')
 '''
-
-
-'''
-def update_data_acc_FFT(array_2d_acc_4):
-    N = 800  # data size
-    T = 1.0 / 40.0  # inverse of sampling rate
-    x = np.linspace(0.0, 800 * T, N)
-    # y = nor.values
-    y =
-    yf = np.abs(scipy.fft(y))
-    xf = scipy.fftpack.fftfreq(nor.size, d=T)
-    fig, ax = plt.subplots()
-    ax.plot(np.abs(xf), np.abs(yf))
-    plt.show()
-
-#https://blog.mide.com/matlab-vs-python-speed-for-vibration-analysis-free-download
-
-
-
-
-
-'''
-
-
-
-
 
 
 #pressure sensor decoding and plot--------------------------------------------------------------------------------
@@ -496,6 +557,8 @@ class Collector(BLEDriverObserver, BLEAdapterObserver):
         print('Connection parameter update request: conn_handle={}, min_conn_int={}, max_conn_int={}'.format(conn_handle,
             conn_params.min_conn_interval, conn_params.max_conn_interval))
 
+
+
 def main(serial_port, address):
     print('Serial port used: {}'.format(serial_port))
     driver    = BLEDriver(serial_port=serial_port, auto_flash=True)
@@ -504,20 +567,19 @@ def main(serial_port, address):
     collector.open()
     for i in xrange(CONNECTIONS):
         conn_handle = collector.connect_and_discover()
-    #fig1.canvas.mpl_connect('key_press_event', on_press)
-    #ani = animation.FuncAnimation(fig1, animate_acc, interval=300)
-    #ani.running = True
-    #ani.direction = +1
+
     fig1.canvas.mpl_connect('button_press_event', onClick)
-    anim = animation.FuncAnimation(fig1, animate_acc, blit=False, interval=300, repeat=True)
+    anim1 = animation.FuncAnimation(fig1, animate_acc, blit=False, interval=1000, repeat=True)
+    #plt.show()
+
+
+
+    anim2 = animation.FuncAnimation(fig2, animate_acc_fft, interval=2000)
     plt.show()
 
-
-
-    #ani = animation.FuncAnimation(figure2, animate_acc, interval=300)
-    plt.show()
     while(True):
         pass
+
 
 if __name__ == "__main__":
     print'start to scan'

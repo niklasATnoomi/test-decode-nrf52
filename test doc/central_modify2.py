@@ -171,6 +171,10 @@ def animate_acc(i):
     plt.xlabel('Time (second)')
     plt.ylabel('Acceleration (g)')
 
+
+
+
+
 def decode_data_acc(data_acc):
     print('\nlength is:{}'.format(len(data_acc)))
     print 'Raw:'
@@ -243,7 +247,7 @@ def decode_data_acc(data_acc):
     else:
          print("\n Update data\n")
     #T = T + 1
-    #if(T=200):
+    #if(T=200): animate_acc_fft(0)
 
 
 
@@ -281,64 +285,24 @@ def filling_new_data_acc(array_2d_acc_2):
 #ACC FFT---------------------------------------------------------------------------------------------------
 #nor = pd.read_csv('normal.csv', header=1)
 #https://plot.ly/matplotlib/fft/
-'''
-import matplotlib.pyplot as plt
-import plotly.plotly as py
-import numpy as np
-# Learn about API authentication here: https://plot.ly/python/getting-started
-# Find your api_key here: https://plot.ly/settings/api
+''''''
 
-Fs = 40  # sampling rate
-Ts = 1.0/Fs # sampling interval
-t = np.arange(0,1,Ts) # time vector
+style.use('fivethirtyeight')
+fig2 = plt.figure()
+ax2 = fig2.add_subplot(1,1,1)
 
-ff = 5  # frequency of the signal
-y = np.sin(2*np.pi*ff*t)
+def animate_acc_fft(i):
+    fft = np.fft.fft(array_2d_acc_4[0])
+    T = 1 / 40  # sample rate
+    N = array_time.size
+    # 1/T = frequency
+    f = np.linspace(0, 1 / T, N)
+    ax2.clear()
+    plt.ylabel("Amplitude")
+    plt.xlabel("Frequency [Hz]")
+    plt.bar(f[:N // 2], np.abs(fft)[:N // 2] * 1 / N, width=1.5)  # 1 / N is a normalization factor
+    #plt.show()
 
-n = len(y) # length of the signal
-k = np.arange(n)
-T = n/Fs
-frq = k/T # two sides frequency range
-frq = frq[range(n/2)] # one side frequency range
-
-Y = np.fft.fft(y)/n # fft computing and normalization
-Y = Y[range(n/2)]
-
-fig, ax = plt.subplots(2, 1)
-ax[0].plot(t,y)
-ax[0].set_xlabel('Time')
-ax[0].set_ylabel('Amplitude')
-ax[1].plot(frq,abs(Y),'r') # plotting the spectrum
-ax[1].set_xlabel('Freq (Hz)')
-ax[1].set_ylabel('|Y(freq)|')
-
-plot_url = py.plot_mpl(fig, filename='mpl-basic-fft')
-
-#https://www.youtube.com/watch?v=aQKX3mrDFoY
-
-'''
-
-
-'''
-def update_data_acc_FFT(array_2d_acc_4):
-    N = 800  # data size
-    T = 1.0 / 40.0  # inverse of sampling rate
-    x = np.linspace(0.0, 800 * T, N)
-    # y = nor.values
-    y =
-    yf = np.abs(scipy.fft(y))
-    xf = scipy.fftpack.fftfreq(nor.size, d=T)
-    fig, ax = plt.subplots()
-    ax.plot(np.abs(xf), np.abs(yf))
-    plt.show()
-
-#https://blog.mide.com/matlab-vs-python-speed-for-vibration-analysis-free-download
-
-
-
-
-
-'''
 
 
 
@@ -509,13 +473,17 @@ def main(serial_port, address):
     #ani.running = True
     #ani.direction = +1
     fig1.canvas.mpl_connect('button_press_event', onClick)
-    anim = animation.FuncAnimation(fig1, animate_acc, blit=False, interval=300, repeat=True)
+    anim1= animation.FuncAnimation(fig1, animate_acc, blit=False, interval=300, repeat=True)
+
+    fig2.canvas.mpl_connect('button_press_event', onClick)
+    anim2= animation.FuncAnimation(fig2, animate_acc_fft, blit=False, interval=300, repeat=True)
+
     plt.show()
 
 
 
     #ani = animation.FuncAnimation(figure2, animate_acc, interval=300)
-    plt.show()
+    #plt.show()
     while(True):
         pass
 
