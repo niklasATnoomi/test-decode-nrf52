@@ -351,27 +351,6 @@ def animate_acc_fft(i):
     print('\n12\n'),
     N = 800
     print('\n13\n'),
-    ''' '''
-
-
-
-
-
-
-
-    '''
-    print('\n8\n'),
-    t = np.linspace(0, 0.5, 500)
-    print('\n9\n'),
-    s = np.sin(40 * 2 * np.pi * t) + 0.5 * np.sin(90 * 2 * np.pi * t)
-    print('\n10\n'),
-    fft = np.fft.fft(s)
-    T = t[1] - t[0]  # sample rate
-    print('\n11\n'),
-    N = s.size
-    print('\n12\n'),
-    '''
-
 
     # 1/T = frequency
     f = np.linspace(0, 1 / T, N)
@@ -388,22 +367,7 @@ def animate_acc_fft(i):
     plt.ylabel("Amplitude")
     plt.xlabel("Frequency [Hz]")
 
-    '''
-    #plt.bar(f[:N // 2], np.abs(fft)[:N // 2] * 1 / N, width=1.5)  # 1 / N is a normalization factor
-    ax2.plot(array_time, array_2d_acc_4[2], 'C3', label="Z-axis", linewidth=1)
-    plt.ylabel("Amplitude")
-    plt.xlabel("Frequency [Hz]")
-    
 
-def animate_acc(i):
-    ax1.clear()
-    ax1.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
-    ax1.plot( array_time, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
-    ax1.plot( array_time, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
-    plt.legend(loc='best')
-    plt.xlabel('Time (second)')
-    plt.ylabel('Acceleration (g)')
-'''
 
 
 #pressure sensor decoding and plot--------------------------------------------------------------------------------

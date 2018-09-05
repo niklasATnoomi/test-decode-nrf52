@@ -1,0 +1,5 @@
+1. central_modify_fft.py is the code support time domain and frequency domain 
+
+2. command for running the code
+#cd C:\Users\Niklas Liu\Documents\NRF_test_connection\test-decode-nrf52\test doc
+#python central_modify_fft.py -p COM1 -f NRF52 -a EB2533326679
