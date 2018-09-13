@@ -1,13 +1,17 @@
+1. raw data
+
+0
 02             -type
-
+1  2  3  4  5
 7e b9 4a 00 00 -time 
-
-e903           -sample duration 
-
-09a4           -temperature in 0.01C
-
+6  7
+e9 03           -sample duration 
+8   9
+09 a4           -temperature in 0.01C, 0x09a4=2468, which is 24,68 degree 
+10
 0a             -sample
   -data
+ 11-20
 3f7b7a
 3f8ae2
 3f5cf0
@@ -18,3 +22,12 @@ e903           -sample duration
 3f5c19
 3f8360
 3f16ef
+
+2. decoding 
+data sheet 
+https://www.st.com/resource/en/datasheet/dm00140895.pdf
+
+
+0x3f16ef=4134639
+
+4134639/4096=1009 hPa, which make sense 

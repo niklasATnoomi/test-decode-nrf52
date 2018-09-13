@@ -107,27 +107,31 @@ command                      = BLEUUID(0x1402, noomi_service_base)
 uuids = [noomi_service_base]
 
 
-array_time = []
+array_time_acc = []
 for j in range(0, 800):
-    array_time.append(j*0.025)
+    array_time_acc.append(j*0.025)
 
+
+array_time_pre = []
+for j in range(0, 200):
+    array_time_pre.append(j*0.1)
 
 
 #ACC or Pressure data seperation --------------------------------------------------------------------------------
 
 def seperate_data(data_all):
     data_acc =[]
-    data_pressure = []
+    data_pre = []
     if(data_all[0] == 0):
         for i in range(9, len(data_all)):
             data_acc.append(data_all[i])
             ##print(format(data_all[i],'02x')),
         decode_data_acc(data_acc) #select only for acc data
     if (data_all[0] == 2):
-        for i in range(9, len(data_all)):
-            data_pressure.append(data_all[i])
+        for i in range(11, len(data_all)):
+            data_pre.append(data_all[i])
             ##print(format(data_all[i],'02x')),
-        decode_data_pressure(data_pressure) #select only for acc data
+        decode_data_pre(data_pre) #select only for acc data
 
 #PAUS function for the plot------------------
 
@@ -163,9 +167,9 @@ ax1 = fig1.add_subplot(1,1,1)
 #fig1.canvas.mpl_connect('key_press_event', on_press)
 def animate_acc(i):
     ax1.clear()
-    ax1.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
-    ax1.plot( array_time, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
-    ax1.plot( array_time, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
+    ax1.plot( array_time_acc, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
+    ax1.plot( array_time_acc, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
+    ax1.plot( array_time_acc, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
     plt.legend(loc='best')
     plt.xlabel('Time (second)')
     plt.ylabel('Acceleration (g)')
@@ -247,10 +251,10 @@ def decode_data_acc(data_acc):
 
     # t = np.linspace(0, 0.5, 500)
     #s = np.sin(40 * 2 * np.pi * t) + 0.5 * np.sin(90 * 2 * np.pi * t)
-    #array_time
+    #array_time_acc
     '''
     print('\n8\n'),
-    s = np.sin(40 * 2 * np.pi * array_time) + 0.5 * np.sin(90 * 2 * np.pi * array_time)
+    s = np.sin(40 * 2 * np.pi * array_time_acc) + 0.5 * np.sin(90 * 2 * np.pi * array_time_acc)
     print('\n9\n'),
     fft = np.fft.fft(s)
     print('\n10\n'),
@@ -276,8 +280,8 @@ def decode_data_acc(data_acc):
     T = t[1] - t[0]  # sample rate
     print('\n12\n'),
     N = s.size
-    print "\n\narray_time size is"
-    print array_time.size
+    print "\n\narray_time_acc size is"
+    print array_time_acc.size
     print('\n13\n'),
     # 1/T = frequency
     f = np.linspace(0, 1 / T, N)
@@ -339,7 +343,7 @@ def animate_acc_fft(i):
     s = []
     #print('\n09\n'),
     for j in range(0, 800):
-        #array_time.append(j * 0.025)
+        #array_time_acc.append(j * 0.025)
         s.append(array_2d_acc_4[0][j])
 
     #t = np.linspace(0, 0.5, 500)
@@ -347,7 +351,7 @@ def animate_acc_fft(i):
     #s = array_2d_acc_4[0]
     #print('\n11\n'),
     fft = np.fft.fft(s)
-    T = array_time[1] - array_time[0]  # sample rate
+    T = array_time_acc[1] - array_time_acc[0]  # sample rate
     #print('\n12\n'),
     N = 800
     #print('\n13\n'),
@@ -356,9 +360,9 @@ def animate_acc_fft(i):
     f = np.linspace(0, 1 / T, N)
 
     ax2.clear()
-    #ax2.plot( array_time, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
-    #ax2.plot( array_time, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
-    #ax2.plot( array_time, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
+    #ax2.plot( array_time_acc, array_2d_acc_4[0],'C1', label="X-axis",linewidth=1)
+    #ax2.plot( array_time_acc, array_2d_acc_4[1],'C2', label="Y-axis",linewidth=1)
+    #ax2.plot( array_time_acc, array_2d_acc_4[2],'C3', label="Z-axis",linewidth=1)
     #ax2.plot(f[:N // 2], np.abs(fft)[:N // 2] * 1 / N)
     ax2.plot(f, np.abs(fft * 1 / N))
     #ax2.plot(f[:N // 2], np.abs(fft)[:N // 2] * 1 / N)
@@ -372,42 +376,74 @@ def animate_acc_fft(i):
 
 #pressure sensor decoding and plot--------------------------------------------------------------------------------
 #for round robin function
-'''
-array_2d_pressure_0 = ([0] * 40) # correct way to initial
-array_2d_pressure_3 = ([0] * 800)
-#for display in final
-array_2d_pressure_4 = ([0] * 800)
 
-array_2d_pressure_5  = [1]*800
-array_2d_pressure_6  = [2]*800
-array_2d_pressure_7  = [3]*800
+
+#for display in final
+array_pre_3 = ([0] * 200)
+array_pre_4 = ([0] * 200)
 
 
 style.use('fivethirtyeight')
-fig2 = plt.figure()
-ax2 = fig2.add_subplot(1,1,1)
+fig3 = plt.figure()
+ax3  = fig3.add_subplot(1,1,1)
 
-def animate_pressure(i):
-    ax2.clear()
-    ax2.plot( array_time, array_2d_pressure_0[0],'C1', label="X-axis",linewidth=1)
+def animate_pre(i):
+    ax3.clear()
+    ax3.plot( array_time_pre, array_pre_4,'C1', label="X-axis",linewidth=1)
     plt.legend(loc='best')
     plt.xlabel('Time (second)')
-    plt.ylabel('Acceleration (g)')
+    plt.ylabel('pressure (hPa)')
 
 
 
-def decode_data_acc(data_acc):
+def decode_data_pre(data_pre):
+    print('\nPre length is:{}'.format(len(data_pre)))
+    print 'Raw:'
+    for x in data_pre:
+        print(format(x, '02x')),
+    array_pre_1 = [([''] * 10) for p in range(3)]  # correct way to initial
+    print('\n array_2d_pre_1 length is:{}'.format(len(array_pre_1[0])))
+    print('\n0\n'),
+    for i in range(0, len(data_pre)):
+        array_pre_1[i%3][i/3] = data_pre[i]
+        print(format(array_pre_1[i % 3][i / 3], '02x')),
+    print('\n1\n'),  # seperate raw value into arrays
+    for i in range(0, 3):
+        for j in range(0, 10):
+            print(format(array_pre_1[i][j], '02x')),
+        print('\n'),
+    print('\n2\n'),
+    array_pre_2 = ([0] * 10)  # correct way to initial
+    for j in range(0, 10):
+        array_pre_2[j]=(array_pre_1[0][j]*(256*256/4096.00000))+(array_pre_1[1][j]*(256/4096.00000))+(array_pre_1[2][j]/4096.00000)
+        print(array_pre_2[j])
+
+    if (pause == False):
+        print("\nUpdate Pre data\n")
+        around_robin_pre()
+        filling_new_data_pre(array_pre_2)
+    else:
+        print("\nNOT Update Pre data\n")
 
 
 
+def around_robin_pre():
+    for j in range(0, (200-10)):
+        array_pre_3[j]=array_pre_4[j+10]
+    print("\naround_robin_pre\n")
 
 
-def update_data_pressure(array_2d_pressure_4):
-    around_robin()
-    filling_new_data(array_2d_pressure_4)
-'''
-
-
+def filling_new_data_pre(array_pre_2):
+    print('\n06\n'),
+    for j in range(0, 10):
+            array_pre_3[j+200-10]=array_pre_2[j]
+            print ('%.6f' % (array_pre_2[j])),
+    print('\n07\n'),
+    for j in range(0, 200):
+        array_pre_4[j]=array_pre_3[j]
+        print ('%.6f' % (array_pre_3[j])),
+    print('\n'),
+    print("\nfilling_new_data_pre\n")
 
 
 
@@ -539,6 +575,9 @@ def main(serial_port, address):
 
 
     anim2 = animation.FuncAnimation(fig2, animate_acc_fft, interval=2000)
+
+    anim3 = animation.FuncAnimation(fig3, animate_pre, blit=False, interval=1000, repeat=True)
+
     plt.show()
 
     while(True):
