@@ -392,7 +392,7 @@ def animate_pre(i):
     ax3.plot( array_time_pre, array_pre_4,'C1', label="X-axis",linewidth=1)
     plt.legend(loc='best')
     plt.xlabel('Time (second)')
-    plt.ylabel('pressure (hPa)')
+    plt.ylabel('pressure (hkPa)')
 
 
 
@@ -436,7 +436,7 @@ def around_robin_pre():
 def filling_new_data_pre(array_pre_2):
     print('\n06\n'),
     for j in range(0, 10):
-            array_pre_3[j+200-10]=array_pre_2[j]
+            array_pre_3[j+200-10]=array_pre_2[j]/1000.00000
             print ('%.6f' % (array_pre_2[j])),
     print('\n07\n'),
     for j in range(0, 200):
