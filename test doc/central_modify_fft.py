@@ -78,7 +78,7 @@ sys.stdout.write('.')
 import time
 from pc_ble_driver_py.observers     import *
 
-TARGET_DEV_NAME = "Noomi WB"
+TARGET_DEV_NAME = "Noomi NL"
 CONNECTIONS     = 1
 
 from pc_ble_driver_py import config
@@ -239,11 +239,11 @@ def decode_data_acc(data_acc):
 
 
     if(pause == False):
-         print("\n NOT Update data\n")
+         print("\nUpdate data\n")
          around_robin_acc()
          filling_new_data_acc(array_2d_acc_0)
     else:
-         print("\n Update data\n")
+         print("\nNOT Update data\n")
 
     # t = np.linspace(0, 0.5, 500)
     #s = np.sin(40 * 2 * np.pi * t) + 0.5 * np.sin(90 * 2 * np.pi * t)
