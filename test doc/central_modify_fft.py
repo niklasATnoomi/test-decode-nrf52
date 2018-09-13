@@ -335,22 +335,22 @@ ax2 = fig2.add_subplot(1,1,1)
 
 def animate_acc_fft(i):
 
-    print('\n08\n'),
+    #print('\n08\n'),
     s = []
-    print('\n09\n'),
+    #print('\n09\n'),
     for j in range(0, 800):
         #array_time.append(j * 0.025)
         s.append(array_2d_acc_4[0][j])
 
     #t = np.linspace(0, 0.5, 500)
-    print('\n10\n'),
+    #print('\n10\n'),
     #s = array_2d_acc_4[0]
-    print('\n11\n'),
+    #print('\n11\n'),
     fft = np.fft.fft(s)
     T = array_time[1] - array_time[0]  # sample rate
-    print('\n12\n'),
+    #print('\n12\n'),
     N = 800
-    print('\n13\n'),
+    #print('\n13\n'),
 
     # 1/T = frequency
     f = np.linspace(0, 1 / T, N)
